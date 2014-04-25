@@ -1,0 +1,27 @@
+{
+  "command": {
+    "type": "string",
+    "required": true
+  },
+  "alias": {
+    "type": "string",
+    "required": true
+  },
+  "default": {
+    "type": "string"
+  },
+  "always": {
+    "type": "string"
+  },
+  "formula": {
+    "type": "string"
+  },
+  "options": {
+    "type": "object",
+    "exclusions": [ "mappings" ]
+  },
+  "mappings": {
+    "type": "array",
+    "exclusions": [ "options" ]
+  }
+}

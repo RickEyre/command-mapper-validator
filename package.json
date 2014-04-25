@@ -1,0 +1,35 @@
+{
+  "name": "command-mapper-validator",
+  "version": "0.0.0",
+  "description": "Validates command-mapping JSON files or objects.",
+  "main": "lib/validator.js",
+  "scripts": {
+    "test": "./node_modules/.bin/grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RickEyre/command-mapper-validator.git"
+  },
+  "author": "Rick Eyre <rick.eyre@hotmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RickEyre/command-mapper-validator/issues"
+  },
+  "homepage": "https://github.com/RickEyre/command-mapper-validator",
+  "dependencies": {
+    "lodash": "2.4.1"
+  },
+  "devDependencies": {
+    "grunt-cli": "0.1.13",
+    "grunt-contrib-jshint": "0.10.0",
+    "grunt-bump": "0.0.13",
+    "mocha": "1.18.2",
+    "grunt-mocha-test": "0.10.2",
+    "chai": "1.9.1"
+  },
+  "keywords": [
+    "validator",
+    "mapping",
+    "module"
+  ]
+}
