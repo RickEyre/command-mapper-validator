@@ -22,6 +22,12 @@ module.exports = function(grunt) {
       files: [ "lib/*", "test/*" ]
     },
 
+    jsonlint: {
+      sample: {
+        src: [ "lib/*.json" ]
+      }
+    },
+
     bump: {
       options: {
         files: [ "package.json" ],
@@ -49,8 +55,9 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks("grunt-contrib-jshint");
+  grunt.loadNpmTasks('grunt-jsonlint');
   grunt.loadNpmTasks("grunt-bump");
   grunt.loadNpmTasks("grunt-mocha-test");
 
-  grunt.registerTask("default", [ "jshint", "mochaTest" ]);
+  grunt.registerTask("default", [ "jshint", "jsonlint", "mochaTest" ]);
 };
