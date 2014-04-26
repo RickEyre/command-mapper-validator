@@ -72,4 +72,19 @@ suite("validator", function() {
     });
   });
 
+  test("objects property's must be of type string", function() {
+    _.forEach(specification, function(propertySpec, propertyKey) {
+      if (propertySpec.type === "object") {
+        _.forEach(_.omit(types, "string"), function(badType) {
+          var cp = _.clone(mapping);
+          cp[propertyKey] = { property: badType };
+          expect(validator(cp)).to.have.length(1);
+        });
+        var cp = _.clone(mapping);
+        cp[propertyKey] = { property: types.string };
+        expect(validator(cp)).to.have.length(0);
+      }
+    });
+  });
+
 });
