@@ -6,13 +6,13 @@ var validator = require("../lib/validator"),
     expect = require("chai").expect,
     path = require("path"),
     specification = require(path.resolve(__dirname, "../lib/specification.json")),
-    mapping = { },
+    baseMapping = { },
     types = {
       string: "string",
       number: 1,
       "function": function() {},
-      object: {},
-      array: []
+      object: { command: "git", alias: "g" },
+      array: [ { command: "git", alias: "g" } ]
     };
 
 function findType(spec) {
@@ -34,11 +34,11 @@ suite("validator", function() {
   });
 
   test("command and alias should be required properties", function() {
-    expect(validator(mapping)).to.have.length(2);
+    expect(validator(baseMapping)).to.have.length(2);
     expect(validator({ command: "git" })).to.have.length(1);
     expect(validator({ alias: "g" })).to.have.length(1);
-    _.assign(mapping, { command: "git", alias: "g"});
-    expect(validator(mapping)).to.have.length(0);
+    _.assign(baseMapping, { command: "git", alias: "g"});
+    expect(validator(baseMapping)).to.have.length(0);
   });
 
   test("type checking should work correctly", function() {
@@ -48,12 +48,12 @@ suite("validator", function() {
       var type = findType(propertySpec);
       // Test that each type that is not the specified type returns an error.
       _.forEach(_.omit(types, type), function(badType) {
-        var cp = _.clone(mapping);
+        var cp = _.clone(baseMapping);
         cp[propertyKey] = badType;
         expect(validator(cp)).to.have.length(1);
       });
       // Test that the type that it is specified to be does not return an error.
-      var cp = _.clone(mapping);
+      var cp = _.clone(baseMapping);
       cp[propertyKey] = types[type];
       expect(validator(cp)).to.have.length(0);
     });
@@ -63,7 +63,7 @@ suite("validator", function() {
     _.forEach(specification, function(propertySpec, propertyKey) {
       var type = findType(propertySpec);
       _.forEach(propertySpec.exclusions, function(exclusion) {
-        var cp = _.clone(mapping);
+        var cp = _.clone(baseMapping);
         cp[propertyKey] = types[type];
         expect(validator(cp)).to.have.length(0);
         cp[exclusion] = types[findType(specification[exclusion])];
@@ -76,15 +76,23 @@ suite("validator", function() {
     _.forEach(specification, function(propertySpec, propertyKey) {
       if (propertySpec.type === "object") {
         _.forEach(_.omit(types, "string"), function(badType) {
-          var cp = _.clone(mapping);
+          var cp = _.clone(baseMapping);
           cp[propertyKey] = { property: badType };
           expect(validator(cp)).to.have.length(1);
         });
-        var cp = _.clone(mapping);
+        var cp = _.clone(baseMapping);
         cp[propertyKey] = { property: types.string };
         expect(validator(cp)).to.have.length(0);
       }
     });
+  });
+
+  test("validation should be deep", function() {
+    var cp = _.clone(baseMapping);
+    cp.mappings = [ { } ];
+    expect(validator(cp)).to.have.length(2);
+    cp.mappings[0] = baseMapping;
+    expect(validator(cp)).to.have.length(0);
   });
 
 });

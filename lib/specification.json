@@ -22,7 +22,7 @@
   },
   "mappings": {
     "type": "array",
-    "children": "mapping",
+    "isMappings": true,
     "exclusions": [ "options" ]
   }
 }
