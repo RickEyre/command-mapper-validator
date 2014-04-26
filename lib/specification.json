@@ -18,10 +18,14 @@
   },
   "options": {
     "type": "object",
+    "properties": { 
+      "type": "string"
+    },
     "exclusions": [ "mappings" ]
   },
   "mappings": {
     "type": "array",
+    "children": "mapping",
     "exclusions": [ "options" ]
   }
 }
