@@ -16,7 +16,7 @@ var validator = require("../lib/validator"),
     };
 
 function findType(spec) {
-  return _.find(spec, "type") || "string";
+  return spec.type || "string";
 }
 
 suite("validator", function() {
