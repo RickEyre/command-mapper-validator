@@ -62,11 +62,11 @@ suite("validator", function() {
   test("exclusions should work correctly", function() {
     _.forEach(specification, function(propertySpec, propertyKey) {
       var type = findType(propertySpec);
-      _.forEach(_.find(propertySpec, "exclusions"), function(exclusion) {
+      _.forEach(propertySpec.exclusions, function(exclusion) {
         var cp = _.clone(mapping);
-        cp[propertyKey] = type;
+        cp[propertyKey] = types[type];
         expect(validator(cp)).to.have.length(0);
-        cp[exclusion] = findType(_.find(specification, exclusion));
+        cp[exclusion] = types[findType(specification[exclusion])];
         expect(validator(cp)).to.have.length(2);
       });
     });
