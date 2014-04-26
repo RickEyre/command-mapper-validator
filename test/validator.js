@@ -6,7 +6,18 @@ var validator = require("../lib/validator"),
     expect = require("chai").expect,
     path = require("path"),
     specification = require(path.resolve(__dirname, "../lib/specification.json")),
-    mapping = { };
+    mapping = { },
+    types = {
+      string: "string",
+      number: 1,
+      "function": function() {},
+      object: {},
+      array: []
+    };
+
+function findType(spec) {
+  return _.find(spec, "type") || "string";
+}
 
 suite("validator", function() {
 
@@ -31,29 +42,33 @@ suite("validator", function() {
   });
 
   test("type checking should work correctly", function() {
-    var base = { command: "git", alias: "g" },
-        types = {
-          string: "string",
-          number: 1,
-          "function": function() {},
-          object: {},
-          array: []
-        };
-
     // Loop through each valid property in the specification.
     _.forEach(specification, function(propertySpec, propertyKey) {
       // Find the type that the property is specified to be. Default to string.
-      var type = _.find(propertySpec, "type") || "string";
+      var type = findType(propertySpec);
       // Test that each type that is not the specified type returns an error.
       _.forEach(_.omit(types, type), function(badType) {
-        var cp = _.clone(base);
+        var cp = _.clone(mapping);
         cp[propertyKey] = badType;
         expect(validator(cp)).to.have.length(1);
       });
       // Test that the type that it is specified to be does not return an error.
-      var cp = _.clone(base);
+      var cp = _.clone(mapping);
       cp[propertyKey] = types[type];
       expect(validator(cp)).to.have.length(0);
+    });
+  });
+
+  test("exclusions should work correctly", function() {
+    _.forEach(specification, function(propertySpec, propertyKey) {
+      var type = findType(propertySpec);
+      _.forEach(_.find(propertySpec, "exclusions"), function(exclusion) {
+        var cp = _.clone(mapping);
+        cp[propertyKey] = type;
+        expect(validator(cp)).to.have.length(0);
+        cp[exclusion] = findType(_.find(specification, exclusion));
+        expect(validator(cp)).to.have.length(2);
+      });
     });
   });
 
