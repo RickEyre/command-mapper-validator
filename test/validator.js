@@ -60,8 +60,12 @@ suite("validator", function() {
   });
 
   test("exclusions should work correctly", function() {
+    // Loop through each property in the specification.
     _.forEach(specification, function(propertySpec, propertyKey) {
+      // Find he type that the property is specified to be.
       var type = findType(propertySpec);
+      // For each property that has specified exclusions test that the property
+      // cannot be added with each of its exclusions.
       _.forEach(propertySpec.exclusions, function(exclusion) {
         var cp = _.clone(baseMapping);
         cp[propertyKey] = types[type];
@@ -73,13 +77,17 @@ suite("validator", function() {
   });
 
   test("objects property's must be of type string", function() {
+    // For each property in the specification.
     _.forEach(specification, function(propertySpec, propertyKey) {
+      // If the properties specified type is object then test that any other
+      // type other then string assigned as a property of it will fail.
       if (propertySpec.type === "object") {
         _.forEach(_.omit(types, "string"), function(badType) {
           var cp = _.clone(baseMapping);
           cp[propertyKey] = { property: badType };
           expect(validator(cp)).to.have.length(1);
         });
+        // Test that string properties on the object will work.
         var cp = _.clone(baseMapping);
         cp[propertyKey] = { property: types.string };
         expect(validator(cp)).to.have.length(0);
@@ -88,6 +96,7 @@ suite("validator", function() {
   });
 
   test("validation should be deep", function() {
+    // Test that mappings that have mappings will be validated deeply.
     var cp = _.clone(baseMapping);
     cp.mappings = [ { } ];
     expect(validator(cp)).to.have.length(2);
