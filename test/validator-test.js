@@ -76,7 +76,7 @@ suite("validator", function() {
     });
   });
 
-  test("objects property's must be of type string", function() {
+  test("objects' properties must be of type string", function() {
     // For each property in the specification.
     _.forEach(specification, function(propertySpec, propertyKey) {
       // If the properties specified type is object then test that any other
