@@ -9,7 +9,7 @@ Validates mapping objects or mapping JSON files. For more information see
 Install
 =======
 
-```bash
+```
 $ npm install command-mapper-validator
 ```
 
